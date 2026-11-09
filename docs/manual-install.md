@@ -6,7 +6,7 @@ somewhere else.
 ## 1. Build
 
 ```bash
-clang -O2 -Wall -Wextra touchbar-awake.c -o touchbar-awake -framework CoreFoundation -framework CoreGraphics
+clang -O2 -Wall -Wextra touchbar-awake.c -o touchbar-awake -framework CoreFoundation
 ```
 
 Try it in the foreground first (Ctrl+C to stop):

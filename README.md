@@ -14,11 +14,11 @@ the Touch Bar) does this:
 1. After about 60 seconds it dims the Touch Bar (dimming step `2`).
 2. About 15 seconds later it sets the dimming step to "off" (`4`) and disables the panel.
 
-The flicker shows up in that sleeping state. `touchbar-awake` checks the dimming step every
-2 seconds. While the built-in display is on, it resets the step to full brightness (`1`).
-`TouchBarServer` still turns the panel off, but with the step at full the flicker stops.
+The same happens when the display turns off, for example on a locked screen.
 
-When the lid is closed or the display is asleep, the agent does nothing.
+The flicker shows up in that sleeping state. `touchbar-awake` checks the dimming step every
+2 seconds and resets it to full brightness (`1`). `TouchBarServer` still turns the panel off,
+but with the step at full the flicker stops.
 
 It talks to the private `DFRBrightness` framework that macOS uses for Touch Bar brightness.
 No root, no kernel extension, no system settings changed. It uses about 4 MB of RAM and almost

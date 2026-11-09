@@ -7,7 +7,7 @@ LOG       := $(HOME)/Library/Logs/$(NAME).log
 DOMAIN    := gui/$(shell id -u)
 
 CFLAGS    := -O2 -Wall -Wextra
-FRAMEWORKS := -framework CoreFoundation -framework CoreGraphics
+FRAMEWORKS := -framework CoreFoundation
 
 .PHONY: all install uninstall status clean
 

@@ -1,18 +1,16 @@
 // touchbar-awake: stops the Touch Bar flicker next to Touch ID on MacBook Pro.
 //
-// When the Mac is idle, TouchBarServer first dims the Touch Bar, then sets its dimming step
+// When the Mac is idle, or the display is off, TouchBarServer sets the Touch Bar dimming step
 // to "off" and disables the panel. On affected machines the right edge of the panel then
-// strobes. This program watches the dimming step and resets it to full brightness while the
-// built-in display is on. The panel itself still turns off; it just stops flickering.
+// strobes. This program watches the dimming step and resets it to full brightness. The panel
+// itself stays off; it just stops flickering.
 //
 // Uses the private DFRBrightness framework, so a macOS update may break it.
 //
 // Build: make
 // Usage: touchbar-awake [seconds_between_checks]   (default 2)
 #include <CoreFoundation/CoreFoundation.h>
-#include <CoreGraphics/CoreGraphics.h>
 #include <dlfcn.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -24,17 +22,6 @@
 typedef void *(*client_create_fn)(CFAllocatorRef);
 typedef long (*client_get_step_fn)(void *);
 typedef long (*client_set_step_fn)(void *, long);
-
-// With the lid closed or the display asleep, leave the Touch Bar alone.
-static bool builtin_display_on(void) {
-    CGDirectDisplayID ids[16];
-    uint32_t count = 0;
-    if (CGGetActiveDisplayList(16, ids, &count) != kCGErrorSuccess) return false;
-    for (uint32_t i = 0; i < count; i++) {
-        if (CGDisplayIsBuiltin(ids[i]) && !CGDisplayIsAsleep(ids[i])) return true;
-    }
-    return false;
-}
 
 static void log_line(const char *msg, long before, long after) {
     char ts[32];
@@ -62,7 +49,7 @@ int main(int argc, char **argv) {
     fflush(stdout);
     for (;;) {
         long step = get_step(client);
-        if (step != STEP_FULL && builtin_display_on()) {
+        if (step != STEP_FULL) {
             set_step(client, STEP_FULL);
             log_line("reset dimming step", step, get_step(client));
         }
